@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PropostaController {
     @PostMapping
     public ResponseEntity<PropostaResponseDTO> criar(@RequestBody PropostaRequestDTO requestDTO) {
+        System.out.println("ola");
         return null;
     }
 }
