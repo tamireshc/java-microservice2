@@ -1,4 +1,4 @@
-package repository;
+package com.example.microservico.repository;
 
 import com.example.microservico.entity.Proposta;
 import org.springframework.data.jpa.repository.JpaRepository;

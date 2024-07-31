@@ -4,15 +4,18 @@ import com.example.microservico.dto.PropostaRequestDTO;
 import com.example.microservico.dto.PropostaResponseDTO;
 import com.example.microservico.entity.Proposta;
 import com.example.microservico.entity.Usuario;
+import com.example.microservico.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import repository.PropostaRepository;
+import com.example.microservico.repository.PropostaRepository;
 
 @Service
 public class PropostaService {
     @Autowired
     private PropostaRepository propostaRepository;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     public PropostaService(PropostaRepository propostaRepository) {
         this.propostaRepository = propostaRepository;
@@ -32,7 +35,8 @@ public class PropostaService {
         usuario.setRenda(propostaRequestDTO.getRenda());
 
         proposta.setUsuario(usuario);
-
+        usuarioRepository.save(usuario);
+        
         Proposta response = propostaRepository.save(proposta);
 
         PropostaResponseDTO responseDTO= new PropostaResponseDTO();
