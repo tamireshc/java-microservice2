@@ -17,7 +17,6 @@ public class PropostaController {
 
     private PropostaService propostaService;
 
-
     @PostMapping
     public ResponseEntity<PropostaResponseDTO> criar(@RequestBody PropostaRequestDTO requestDTO) {
         PropostaResponseDTO response = propostaService.criar(requestDTO);
