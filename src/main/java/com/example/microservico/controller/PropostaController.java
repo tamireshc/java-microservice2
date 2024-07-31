@@ -4,6 +4,7 @@ import com.example.microservico.dto.PropostaRequestDTO;
 import com.example.microservico.dto.PropostaResponseDTO;
 import com.example.microservico.service.PropostaService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,9 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @AllArgsConstructor
 @RestController
+
 @RequestMapping("/proposta")
 public class PropostaController {
-
+    @Autowired
     private PropostaService propostaService;
 
     @PostMapping
