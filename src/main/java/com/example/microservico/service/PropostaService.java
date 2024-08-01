@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.microservico.repository.PropostaRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -58,7 +59,24 @@ public class PropostaService {
         return responseDTO;
     }
 
-    public List<Proposta> obterPropostas() {
-        return propostaRepository.findAll();
+    public List<PropostaResponseDTO> obterPropostas() {
+        List<Proposta> propostas = propostaRepository.findAll();
+        List<PropostaResponseDTO> propostaResponseDTOS = new ArrayList<>();
+
+        for (Proposta proposta : propostas) {
+            PropostaResponseDTO responseDTO = new PropostaResponseDTO();
+            responseDTO.setId(proposta.getId());
+            responseDTO.setValorSolicitado(proposta.getValorSolicitado());
+            responseDTO.setPrazoPagamento(proposta.getPrazoPagamento());
+            responseDTO.setAprovada(proposta.getAprovada());
+            responseDTO.setObservacao(proposta.getObservacao());
+            responseDTO.setNome(proposta.getUsuario().getNome());
+            responseDTO.setSobrenome(proposta.getUsuario().getSobrenome());
+            responseDTO.setCpf(proposta.getUsuario().getCpf());
+            responseDTO.setTelefone(proposta.getUsuario().getTelefone());
+            responseDTO.setRenda(proposta.getUsuario().getRenda());
+            propostaResponseDTOS.add(responseDTO);
+        }
+        return propostaResponseDTOS;
     }
 }
