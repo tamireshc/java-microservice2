@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.microservico.repository.PropostaRepository;
 
+import java.util.List;
+
 @Service
 public class PropostaService {
     @Autowired
@@ -22,7 +24,7 @@ public class PropostaService {
     }
 
     @Transactional
-    public PropostaResponseDTO criar(PropostaRequestDTO propostaRequestDTO){
+    public PropostaResponseDTO criar(PropostaRequestDTO propostaRequestDTO) {
         Proposta proposta = new Proposta();
         proposta.setValorSolicitado(propostaRequestDTO.getValorSolicitado());
         proposta.setPrazoPagamento(propostaRequestDTO.getPrazoPagamento());
@@ -35,11 +37,12 @@ public class PropostaService {
         usuario.setRenda(propostaRequestDTO.getRenda());
 
         proposta.setUsuario(usuario);
-        usuarioRepository.save(usuario);
-        
+//        usuarioRepository.save(usuario);
+
         Proposta response = propostaRepository.save(proposta);
 
-        PropostaResponseDTO responseDTO= new PropostaResponseDTO();
+        PropostaResponseDTO responseDTO = new PropostaResponseDTO();
+        responseDTO.setId(response.getId());
         responseDTO.setValorSolicitado(response.getValorSolicitado());
         responseDTO.setPrazoPagamento(response.getPrazoPagamento());
         responseDTO.setAprovada(response.getAprovada());
@@ -49,7 +52,13 @@ public class PropostaService {
         responseDTO.setCpf(propostaRequestDTO.getCpf());
         responseDTO.setTelefone(propostaRequestDTO.getTelefone());
         responseDTO.setRenda(propostaRequestDTO.getRenda());
+        System.out.println(response.getId());
+        System.out.println(responseDTO.getId());
 
         return responseDTO;
+    }
+
+    public List<Proposta> obterPropostas() {
+        return propostaRepository.findAll();
     }
 }
