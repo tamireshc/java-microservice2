@@ -19,6 +19,8 @@ public class PropostaService {
     private PropostaRepository propostaRepository;
     @Autowired
     private UsuarioRepository usuarioRepository;
+    @Autowired
+    NotificacaoService notificacaoService;
 
     public PropostaService(PropostaRepository propostaRepository) {
         this.propostaRepository = propostaRepository;
@@ -55,6 +57,8 @@ public class PropostaService {
         responseDTO.setRenda(propostaRequestDTO.getRenda());
         System.out.println(response.getId());
         System.out.println(responseDTO.getId());
+
+        notificacaoService.notificar(responseDTO,"proposta-pendente.ex");
 
         return responseDTO;
     }
