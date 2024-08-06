@@ -67,11 +67,13 @@ public class PropostaService {
         return responseDTO;
     }
 
+    // resiliencia caso o envio da mensagem para o rabbitMQ falhe
     private void notificarRabbitMQ(PropostaResponseDTO propostaResponseDTO, Proposta proposta) {
         try {
             notificacaoService.notificar(propostaResponseDTO, exchange);
         } catch (RuntimeException ex) {
             proposta.setIntegrada(false);
+            //edicao da proposta para setar o campo integrada como false
             propostaRepository.findById(proposta.getId()).ifPresent(propostaRepository::save);
         }
     }
