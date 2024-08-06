@@ -62,15 +62,15 @@ public class PropostaService {
         System.out.println(response.getId());
         System.out.println(responseDTO.getId());
 
-        notificarRabbitMQ(responseDTO, proposta);
+        notificarRabbitMQ(proposta);
 
         return responseDTO;
     }
 
     // resiliencia caso o envio da mensagem para o rabbitMQ falhe
-    private void notificarRabbitMQ(PropostaResponseDTO propostaResponseDTO, Proposta proposta) {
+    private void notificarRabbitMQ(Proposta proposta) {
         try {
-            notificacaoService.notificar(propostaResponseDTO, exchange);
+            notificacaoService.notificar(proposta, exchange);
         } catch (RuntimeException ex) {
             proposta.setIntegrada(false);
             //edicao da proposta para setar o campo integrada como false
