@@ -6,6 +6,7 @@ import com.example.microservico.entity.Proposta;
 import com.example.microservico.entity.Usuario;
 import com.example.microservico.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.microservico.repository.PropostaRepository;
@@ -17,8 +18,8 @@ import java.util.List;
 public class PropostaService {
     @Autowired
     private PropostaRepository propostaRepository;
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+    //    @Autowired
+//    private UsuarioRepository usuarioRepository;
     @Autowired
     NotificacaoService notificacaoService;
 
@@ -26,11 +27,15 @@ public class PropostaService {
         this.propostaRepository = propostaRepository;
     }
 
+    @Value("${rabbitmq.propostapendente.exchange}")
+    private String exchange;
+
     @Transactional
     public PropostaResponseDTO criar(PropostaRequestDTO propostaRequestDTO) {
         Proposta proposta = new Proposta();
         proposta.setValorSolicitado(propostaRequestDTO.getValorSolicitado());
         proposta.setPrazoPagamento(propostaRequestDTO.getPrazoPagamento());
+        proposta.setIntegrada(true);
 
         Usuario usuario = new Usuario();
         usuario.setNome(propostaRequestDTO.getNome());
@@ -38,7 +43,6 @@ public class PropostaService {
         usuario.setCpf(propostaRequestDTO.getCpf());
         usuario.setTelefone(propostaRequestDTO.getTelefone());
         usuario.setRenda(propostaRequestDTO.getRenda());
-
         proposta.setUsuario(usuario);
 //        usuarioRepository.save(usuario);
 
@@ -58,9 +62,18 @@ public class PropostaService {
         System.out.println(response.getId());
         System.out.println(responseDTO.getId());
 
-        notificacaoService.notificar(responseDTO,"proposta-pendente.ex");
+        notificarRabbitMQ(responseDTO, proposta);
 
         return responseDTO;
+    }
+
+    private void notificarRabbitMQ(PropostaResponseDTO propostaResponseDTO, Proposta proposta) {
+        try {
+            notificacaoService.notificar(propostaResponseDTO, exchange);
+        } catch (RuntimeException ex) {
+            proposta.setIntegrada(false);
+            propostaRepository.findById(proposta.getId()).ifPresent(propostaRepository::save);
+        }
     }
 
     public List<PropostaResponseDTO> obterPropostas() {
