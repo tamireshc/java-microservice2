@@ -1,0 +1,33 @@
+package com.example.Notificacao.config;
+
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.sns.AmazonSNS;
+import com.amazonaws.services.sns.AmazonSNSClientBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import io.github.cdimascio.dotenv.Dotenv;
+
+@Configuration
+public class AmazonSnsConfiguracao {
+    // Configuração do Amazon SNS
+    Dotenv dotenv = Dotenv.load();
+
+    private final String awsAccessKey = dotenv.get("AWS_ACCESS_KEY");
+    private final String awsSecretKey = dotenv.get("AWS_SECRET_KEY");
+
+    @Bean
+    public AWSCredentials awsCredentials() {
+        return new BasicAWSCredentials(awsAccessKey, awsSecretKey);
+    }
+
+    @Bean
+    public AmazonSNS amazonSNS() {
+        return AmazonSNSClientBuilder.standard()
+                .withCredentials(new AWSStaticCredentialsProvider(awsCredentials()))
+                .withRegion(Regions.AP_EAST_1).build();
+    }
+}
