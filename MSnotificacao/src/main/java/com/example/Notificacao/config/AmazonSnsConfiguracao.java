@@ -28,6 +28,6 @@ public class AmazonSnsConfiguracao {
     public AmazonSNS amazonSNS() {
         return AmazonSNSClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(awsCredentials()))
-                .withRegion(Regions.AP_EAST_1).build();
+                .withRegion(Regions.US_EAST_1).build();
     }
 }
