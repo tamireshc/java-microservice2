@@ -1,5 +1,6 @@
 package com.example.microservico.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,6 +30,8 @@ public class Proposta {
 
     @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_usuario")
+    //É usada na biblioteca Jackson para resolver problemas de referência circular durante a serialização e desserialização de objetos Java para JSON. Ela funciona em conjunto com a anotação @JsonBackReference.
+    @JsonManagedReference
     private Usuario usuario;
 
 }

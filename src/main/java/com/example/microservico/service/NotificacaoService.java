@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public class NotificacaoService {
-    //@Bean de rabbitTemplate criado pelo Spring mas utilizamos o personalizado criado em RabbitMQConfiguration
+    //@Bean de rabbitTemplate que é criado pelo Spring, mas utilizamos o personalizado criado em RabbitMQConfiguration
     private RabbitTemplate rabbitTemplate;
 
     public void notificar(Proposta proposta, String exchange) {

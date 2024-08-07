@@ -42,7 +42,8 @@ public class RabbitMQConfiguration {
     }
 
     //cria um template para enviar mensagens que utiliza o jackson2JsonMessageConverter
-
+    //Converte automaticamente objetos Java em JSON quando envia mensagens
+    //Converte JSON em objetos Java quando recebe mensagens.
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
@@ -52,7 +53,6 @@ public class RabbitMQConfiguration {
     }
 
     //filas
-
     @Bean
     public Queue criarFilaPropostaPendenteMsAnaliseCredito() {
         return QueueBuilder.durable("proposta-pendente.ms-analise-credito").build();
@@ -83,12 +83,12 @@ public class RabbitMQConfiguration {
     @Bean
     public Binding criarBindingPropostaPendeteMsAnaliseCredito() {
         return BindingBuilder.bind(criarFilaPropostaPendenteMsAnaliseCredito())
-                .to(criarFanoutExchangePropostaPendente());
+          .to(criarFanoutExchangePropostaPendente());
     }
 
     @Bean
     public Binding criarBindingPropostaPendenteMsNotificacao() {
         return BindingBuilder.bind(criarFilaPropostaPendenteMsNotificacao())
-                .to(criarFanoutExchangePropostaPendente());
+          .to(criarFanoutExchangePropostaPendente());
     }
 }
