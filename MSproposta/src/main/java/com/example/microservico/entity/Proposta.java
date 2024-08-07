@@ -24,7 +24,7 @@ public class Proposta {
 
     private Boolean aprovada;
 
-    private  boolean integrada;
+    private boolean integrada;
 
     private String observacao;
 
