@@ -18,7 +18,11 @@ public class RabbitMQConfiguration {
     private ConnectionFactory connectionFactory;
 
     @Value("${rabbitmq.propostapendente.exchange}")
-    private String exchanged;
+    private String exchangedPropostaPendente;
+
+    @Value("${rabbitmq.propostaconcluida.exchange}")
+    private String exchangedPropostaConcluida;
+
 
     //o próprio spring cria um @bean do connectionfactory e injeta
     public RabbitMQConfiguration(ConnectionFactory connectionFactory) {
@@ -73,22 +77,43 @@ public class RabbitMQConfiguration {
         return QueueBuilder.durable("proposta-concluida.ms-notificacao").build();
     }
 
+    //exchanges
+
     @Bean
     public FanoutExchange criarFanoutExchangePropostaPendente() {
-        return ExchangeBuilder.fanoutExchange(exchanged).build();
+        return ExchangeBuilder.fanoutExchange(exchangedPropostaPendente).build();
     }
 
-    //binding da fila para o exchanged
+    @Bean
+    public FanoutExchange criarFanoutExchangePropostaConcluida() {
+        return ExchangeBuilder.fanoutExchange(exchangedPropostaConcluida).build();
+    }
+
+    //binding do exchanged Pendente para as filas de proposta e notificação
 
     @Bean
     public Binding criarBindingPropostaPendeteMsAnaliseCredito() {
         return BindingBuilder.bind(criarFilaPropostaPendenteMsAnaliseCredito())
-          .to(criarFanoutExchangePropostaPendente());
+                .to(criarFanoutExchangePropostaPendente());
     }
 
     @Bean
     public Binding criarBindingPropostaPendenteMsNotificacao() {
         return BindingBuilder.bind(criarFilaPropostaPendenteMsNotificacao())
-          .to(criarFanoutExchangePropostaPendente());
+                .to(criarFanoutExchangePropostaPendente());
+    }
+
+    //binding do exchanged Concluida para as filas de proposta e notificação
+
+    @Bean
+    public Binding criarBindingPropostaConcluidaMSPropostaApp() {
+        return BindingBuilder.bind(criarFilaPropostaConcluidaMsProposta())
+                .to(criarFanoutExchangePropostaConcluida());
+    }
+
+    @Bean
+    public Binding criarBindingPropostaConcluidaMsNotificacao() {
+        return BindingBuilder.bind(criarFilaPropostaConcluidaMsNotificacao())
+                .to(criarFanoutExchangePropostaConcluida());
     }
 }
