@@ -1,6 +1,5 @@
-package com.example.Notificacao.domain;
+package com.example.analiseDeCredito.domain;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
