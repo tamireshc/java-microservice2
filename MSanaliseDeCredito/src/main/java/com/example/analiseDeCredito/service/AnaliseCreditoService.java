@@ -5,7 +5,6 @@ import com.example.analiseDeCredito.exceptions.StrategyException;
 import com.example.analiseDeCredito.service.strategy.CalculoPonto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.objenesis.SpringObjenesis;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
