@@ -1,5 +1,6 @@
 package com.example.analiseDeCredito.service.strategy.impl;
 
+import com.example.analiseDeCredito.constants.MensagemConstante;
 import com.example.analiseDeCredito.domain.Proposta;
 import com.example.analiseDeCredito.exceptions.StrategyException;
 import com.example.analiseDeCredito.service.strategy.CalculoPonto;
@@ -15,7 +16,8 @@ public class NomeNegativadoImpl implements CalculoPonto {
     @Override
     public int calcular(Proposta proposta) {
         if(nomeNegativado()){
-            throw new StrategyException("Nome Negativado");
+            throw new StrategyException(String
+                    .format(MensagemConstante.CLIENTE_NEGATIVADO, proposta.getUsuario().getNome()));
         }
         return 100;
     }

@@ -1,5 +1,6 @@
 package com.example.analiseDeCredito.service.strategy.impl;
 
+import com.example.analiseDeCredito.constants.MensagemConstante;
 import com.example.analiseDeCredito.domain.Proposta;
 import com.example.analiseDeCredito.exceptions.StrategyException;
 import com.example.analiseDeCredito.service.strategy.CalculoPonto;
@@ -15,8 +16,9 @@ public class PontuacaoScoreImpl implements CalculoPonto {
     @Override
     public int calcular(Proposta proposta) {
         int score = score();
-        if (score <= 200) {
-            throw new StrategyException("Score Baixo");
+        if (score < 200) {
+            throw new StrategyException(String
+                    .format(MensagemConstante.PONTUACAO_SERASA_BAIXA, proposta.getUsuario().getNome()));
         } else if (score <= 400) {
             return 150;
         } else if (score <= 600) {
