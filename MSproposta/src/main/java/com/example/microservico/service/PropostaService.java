@@ -47,24 +47,8 @@ public class PropostaService {
 //        usuarioRepository.save(usuario);
 
         Proposta response = propostaRepository.save(proposta);
-
-        PropostaResponseDTO responseDTO = new PropostaResponseDTO();
-        responseDTO.setId(response.getId());
-        responseDTO.setValorSolicitado(response.getValorSolicitado());
-        responseDTO.setPrazoPagamento(response.getPrazoPagamento());
-        responseDTO.setAprovada(response.getAprovada());
-        responseDTO.setObservacao(response.getObservacao());
-        responseDTO.setNome(propostaRequestDTO.getNome());
-        responseDTO.setSobrenome(propostaRequestDTO.getSobrenome());
-        responseDTO.setCpf(propostaRequestDTO.getCpf());
-        responseDTO.setTelefone(propostaRequestDTO.getTelefone());
-        responseDTO.setRenda(propostaRequestDTO.getRenda());
-        System.out.println(response.getId());
-        System.out.println(responseDTO.getId());
-
         notificarRabbitMQ(proposta);
-
-        return responseDTO;
+        return converterPropostaParaPropostaResponseDTO(response);
     }
 
     // resiliencia caso o envio da mensagem para o rabbitMQ falhe
@@ -83,19 +67,24 @@ public class PropostaService {
         List<PropostaResponseDTO> propostaResponseDTOS = new ArrayList<>();
 
         for (Proposta proposta : propostas) {
-            PropostaResponseDTO responseDTO = new PropostaResponseDTO();
-            responseDTO.setId(proposta.getId());
-            responseDTO.setValorSolicitado(proposta.getValorSolicitado());
-            responseDTO.setPrazoPagamento(proposta.getPrazoPagamento());
-            responseDTO.setAprovada(proposta.getAprovada());
-            responseDTO.setObservacao(proposta.getObservacao());
-            responseDTO.setNome(proposta.getUsuario().getNome());
-            responseDTO.setSobrenome(proposta.getUsuario().getSobrenome());
-            responseDTO.setCpf(proposta.getUsuario().getCpf());
-            responseDTO.setTelefone(proposta.getUsuario().getTelefone());
-            responseDTO.setRenda(proposta.getUsuario().getRenda());
+            PropostaResponseDTO responseDTO = converterPropostaParaPropostaResponseDTO(proposta);
             propostaResponseDTOS.add(responseDTO);
         }
         return propostaResponseDTOS;
+    }
+
+    public PropostaResponseDTO converterPropostaParaPropostaResponseDTO(Proposta proposta) {
+        PropostaResponseDTO responseDTO = new PropostaResponseDTO();
+        responseDTO.setId(proposta.getId());
+        responseDTO.setValorSolicitado(proposta.getValorSolicitado());
+        responseDTO.setPrazoPagamento(proposta.getPrazoPagamento());
+        responseDTO.setAprovada(proposta.getAprovada());
+        responseDTO.setObservacao(proposta.getObservacao());
+        responseDTO.setNome(proposta.getUsuario().getNome());
+        responseDTO.setSobrenome(proposta.getUsuario().getSobrenome());
+        responseDTO.setCpf(proposta.getUsuario().getCpf());
+        responseDTO.setTelefone(proposta.getUsuario().getTelefone());
+        responseDTO.setRenda(proposta.getUsuario().getRenda());
+        return responseDTO;
     }
 }
