@@ -57,9 +57,14 @@ public class RabbitMQConfiguration {
     }
 
     //filas
+
+    //forcando o erro para a fila de dead letter com maxLength(2L)( maximo 2 mensagens por fila)
     @Bean
     public Queue criarFilaPropostaPendenteMsAnaliseCredito() {
-        return QueueBuilder.durable("proposta-pendente.ms-analise-credito").build();
+        return QueueBuilder.durable("proposta-pendente.ms-analise-credito")
+                .maxLength(2L)
+                .deadLetterExchange("proposta-pendente-dlq.ex")
+                .build();
     }
 
     @Bean
@@ -77,6 +82,12 @@ public class RabbitMQConfiguration {
         return QueueBuilder.durable("proposta-concluida.ms-notificacao").build();
     }
 
+    // fila da dead letter
+    @Bean
+    public Queue criarFilaPropostaPendenteDLQ() {
+        return QueueBuilder.durable("proposta-pendente.dlq").build();
+    }
+
     //exchanges
 
     @Bean
@@ -87,6 +98,13 @@ public class RabbitMQConfiguration {
     @Bean
     public FanoutExchange criarFanoutExchangePropostaConcluida() {
         return ExchangeBuilder.fanoutExchange(exchangedPropostaConcluida).build();
+    }
+
+    // exchange da dead letter
+
+    @Bean
+    public FanoutExchange deadLetterExhanged() {
+        return ExchangeBuilder.fanoutExchange("proposta-pendente-dlq.ex").build();
     }
 
     //binding do exchanged Pendente para as filas de proposta e notificação
@@ -115,5 +133,12 @@ public class RabbitMQConfiguration {
     public Binding criarBindingPropostaConcluidaMsNotificacao() {
         return BindingBuilder.bind(criarFilaPropostaConcluidaMsNotificacao())
                 .to(criarFanoutExchangePropostaConcluida());
+    }
+
+    //binding do exchanged dead letter para a fila de proposta peondente dlq
+    @Bean
+    public Binding criarBindingPropostaPendenteDLQ() {
+        return BindingBuilder.bind(criarFilaPropostaPendenteDLQ())
+                .to(deadLetterExhanged());
     }
 }
