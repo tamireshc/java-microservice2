@@ -14,6 +14,7 @@ services:
     image: msnotificacao:latest
     environment:
       - SPRING_PROFILES_ACTIVE=prod
+    env_file: .env
     depends_on:
       rabbit-mq:
         condition: service_healthy
@@ -37,5 +38,6 @@ services:
   db:
     image: postgres
     environment:
+      POSTGRES_USER: root
       POSTGRES_PASSWORD: 123
       POSTGRES_DB: propostadb

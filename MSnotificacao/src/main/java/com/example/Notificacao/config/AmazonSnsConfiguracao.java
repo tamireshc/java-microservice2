@@ -14,7 +14,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 @Configuration
 public class AmazonSnsConfiguracao {
     // Configuração do Amazon SNS
-    Dotenv dotenv = Dotenv.load();
+    Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
 
     private final String awsAccessKey = dotenv.get("AWS_ACCESS_KEY");
     private final String awsSecretKey = dotenv.get("AWS_SECRET_KEY");
